@@ -40,6 +40,15 @@ func (p *Produce) Produce(ctx context.Context, topic string, i interface{}) erro
 	return p.produce(ctx, topic, b)
 }
 
+func (p *Produce) ProduceWithHeaders(ctx context.Context, topic string, i interface{}, h map[string]string) error {
+	b, err := json.Marshal(i)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	return p.produceWithHeaders(ctx, topic, b, h)
+}
+
 func (p *Produce) ProduceNoMarshal(ctx context.Context, topic string, b []byte) error {
 	return p.produce(ctx, topic, b)
 }
@@ -52,6 +61,34 @@ func (p *Produce) produce(ctx context.Context, topic string, b []byte) error {
 	})
 
 	logx.WithContext(ctx).WithFields(logrus.Fields{
+		"value":     logx.LimitMSGByte(b),
+		"topic":     topic,
+		"partition": partition,
+		"offset":    offset,
+		"duration":  time.Since(start).String(),
+	}).Info("produce information")
+
+	return errors.WithStack(err)
+}
+
+func (p *Produce) produceWithHeaders(ctx context.Context, topic string, b []byte, h map[string]string) error {
+	start := time.Now()
+	var sh []sarama.RecordHeader
+	for key, value := range h {
+		sh = append(sh, sarama.RecordHeader{
+			Key:   []byte(key),
+			Value: []byte(value),
+		})
+	}
+
+	partition, offset, err := p.SyncProducer.SendMessage(&sarama.ProducerMessage{
+		Topic:   topic,
+		Value:   sarama.ByteEncoder(b),
+		Headers: h,
+	})
+
+	logx.WithContext(ctx).WithFields(logrus.Fields{
+		"headers":   logx.Infof("%+v", sh),
 		"value":     logx.LimitMSGByte(b),
 		"topic":     topic,
 		"partition": partition,
