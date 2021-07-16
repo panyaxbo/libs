@@ -113,7 +113,7 @@ func printHeader(sh []sarama.RecordHeader) string {
 	for _, value := range sh {
 		kStr := string(value.Key)
 		vStr := string(value.Value)
-		fmt.Fprintf(b, "%s=\"%s\"", kStr, vStr)
+		fmt.Fprintf(b, "%s=%s ", kStr, vStr)
 	}
 	return b.String()
 }
