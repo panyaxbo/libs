@@ -84,11 +84,11 @@ func (p *Produce) produceWithHeaders(ctx context.Context, topic string, b []byte
 	partition, offset, err := p.SyncProducer.SendMessage(&sarama.ProducerMessage{
 		Topic:   topic,
 		Value:   sarama.ByteEncoder(b),
-		Headers: h,
+		Headers: sh,
 	})
 
 	logx.WithContext(ctx).WithFields(logrus.Fields{
-		"headers":   logx.Infof("%+v", sh),
+		"headers":   logx.Infof("%+v", h),
 		"value":     logx.LimitMSGByte(b),
 		"topic":     topic,
 		"partition": partition,
