@@ -1,3 +1,3 @@
-module github.com/tOnkowzl/libs
+module github.com/panyaxbo/libs
 
 go 1.16

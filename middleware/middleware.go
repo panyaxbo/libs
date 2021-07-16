@@ -14,9 +14,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/panyaxbo/libs/contextx"
+	"github.com/panyaxbo/libs/logx"
 	"github.com/sirupsen/logrus"
-	"github.com/tOnkowzl/libs/contextx"
-	"github.com/tOnkowzl/libs/logx"
 )
 
 var (

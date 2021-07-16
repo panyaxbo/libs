@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/pubsub"
-	"github.com/tOnkowzl/libs/logx"
+	"github.com/panyaxbo/libs/logx"
 	"google.golang.org/api/option"
 )
 

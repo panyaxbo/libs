@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/panyaxbo/libs/logx"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"github.com/tOnkowzl/libs/logx"
 )
 
 func log(ctx context.Context, key string, value interface{}) {

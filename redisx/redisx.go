@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/panyaxbo/libs/logx"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"github.com/tOnkowzl/libs/logx"
 )
 
 type Client struct {

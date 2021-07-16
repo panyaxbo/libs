@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/panyaxbo/libs/contextx"
+	"github.com/panyaxbo/libs/logx"
 	"github.com/sirupsen/logrus"
-	"github.com/tOnkowzl/libs/contextx"
-	"github.com/tOnkowzl/libs/logx"
 )
 
 // Request for client do

@@ -11,10 +11,6 @@ github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE
 github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
 github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
-github.com/tOnkowzl/libs/contextx v0.0.4 h1:RLGxOYoTr4kPLxTj8d3JAjqL5syVzeIfMCDGiSmDKck=
-github.com/tOnkowzl/libs/contextx v0.0.4/go.mod h1:M7nJrUg0bi6MgpYqOc7b7yIoJgJbHA0064eOUBJZnag=
-github.com/tOnkowzl/libs/logx v0.0.28 h1:Q0v1mLiwpgMvus6oHAa4OAawu+B36DsesA5rp4HRDwY=
-github.com/tOnkowzl/libs/logx v0.0.28/go.mod h1:HoMqJLiptk7tTWc2H2vlisC3DJuoUMk5l9fQEa3kl1k=
 golang.org/x/sys v0.0.0-20191026070338-33540a1f6037 h1:YyJpGZS1sBuBCzLAR1VEpK193GlqGZbnPFnPV/5Rsb4=
 golang.org/x/sys v0.0.0-20191026070338-33540a1f6037/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 gorm.io/gorm v1.21.9 h1:INieZtn4P2Pw6xPJ8MzT0G4WUOsHq3RhfuDF1M6GW0E=

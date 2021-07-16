@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/tOnkowzl/libs/logx"
+	"github.com/panyaxbo/libs/logx"
 	glogger "gorm.io/gorm/logger"
 )
 

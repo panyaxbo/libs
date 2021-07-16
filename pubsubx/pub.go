@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"cloud.google.com/go/pubsub"
+	"github.com/panyaxbo/libs/logx"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"github.com/tOnkowzl/libs/logx"
 )
 
 type PubConfig struct {
