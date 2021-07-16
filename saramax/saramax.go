@@ -101,10 +101,19 @@ func (p *Produce) produceWithHeaders(ctx context.Context, topic string, b []byte
 	return errors.WithStack(err)
 }
 
-func printHeader(m map[string]string) string {
+// func printHeader(m map[string]string) string {
+// 	b := new(bytes.Buffer)
+// 	for key, value := range m {
+//		fmt.Fprintf(b, "%s=\"%s\"\n", key, value)
+// 	}
+// 	return b.String()
+// }
+func printHeader(sh []sarama.RecordHeader) string {
 	b := new(bytes.Buffer)
-	for key, value := range m {
-		fmt.Fprintf(b, "%s=\"%s\"\n", key, value)
+	for key, value := range sh {
+		kStr := string(key)
+		vStr := string(value)
+		fmt.Fprintf(b, "%s=\"%s\"", kStr, vStr)
 	}
 	return b.String()
 }
