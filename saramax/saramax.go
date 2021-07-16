@@ -1,6 +1,7 @@
 package saramax
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -89,7 +90,7 @@ func (p *Produce) produceWithHeaders(ctx context.Context, topic string, b []byte
 	})
 
 	logx.WithContext(ctx).WithFields(logrus.Fields{
-		"headers":   fmt.Printf("%+v", h),
+		"headers":   printHeader(h),
 		"value":     logx.LimitMSGByte(b),
 		"topic":     topic,
 		"partition": partition,
@@ -98,4 +99,12 @@ func (p *Produce) produceWithHeaders(ctx context.Context, topic string, b []byte
 	}).Info("produce information")
 
 	return errors.WithStack(err)
+}
+
+func printHeader(m map[string]string) string {
+	b := new(bytes.Buffer)
+	for key, value := range m {
+		fmt.Fprintf(b, "%s=\"%s\"\n", key, value)
+	}
+	return b.String()
 }
