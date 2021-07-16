@@ -90,7 +90,7 @@ func (p *Produce) produceWithHeaders(ctx context.Context, topic string, b []byte
 	})
 
 	logx.WithContext(ctx).WithFields(logrus.Fields{
-		"headers":   printHeader(h),
+		"headers":   printHeader(sh),
 		"value":     logx.LimitMSGByte(b),
 		"topic":     topic,
 		"partition": partition,
