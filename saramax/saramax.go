@@ -3,6 +3,7 @@ package saramax
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -88,7 +89,7 @@ func (p *Produce) produceWithHeaders(ctx context.Context, topic string, b []byte
 	})
 
 	logx.WithContext(ctx).WithFields(logrus.Fields{
-		"headers":   logx.Infof("%+v", h),
+		"headers":   fmt.Printf("%+v", h),
 		"value":     logx.LimitMSGByte(b),
 		"topic":     topic,
 		"partition": partition,
