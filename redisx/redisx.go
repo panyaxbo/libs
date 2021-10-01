@@ -109,6 +109,7 @@ func (c *Client) HDel(ctx context.Context, key string, fields ...string) error {
 
 	logx.WithContext(ctx).WithFields(logrus.Fields{
 		"key":      key,
+		"value":    fields,
 		"duration": time.Since(start).String(),
 	}).Info("redis hdel information")
 
