@@ -2,6 +2,9 @@ package utilx
 
 import (
 	"encoding/json"
+	"net"
+	"net/url"
+	"os"
 	"strings"
 
 	"github.com/panyaxbo/libs/logx"
@@ -26,4 +29,25 @@ func StructToString(data interface{}) string {
 
 func IsStringNullBlank(str string) bool {
 	return str == "" || len(str) <= 0
+}
+
+func IsErrorTimeout(err error) bool {
+	istimeout := false
+	switch err := err.(type) {
+	case net.Error:
+		if err.Timeout() {
+			istimeout = true
+		}
+	case *url.Error:
+		if err, ok := err.Err.(net.Error); ok && err.Timeout() {
+			istimeout = true
+		}
+	}
+	if strings.Contains(err.Error(), "Client.Timeout") {
+		istimeout = true
+	}
+	if os.IsTimeout(err) {
+		istimeout = true
+	}
+	return istimeout
 }
