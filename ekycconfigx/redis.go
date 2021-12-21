@@ -12,7 +12,7 @@ type Redis struct {
 	client *redisx.Client
 }
 
-func NewRedis(c *redisx.Client) *Redis {
+func newRedis(c *redisx.Client) *Redis {
 	return &Redis{
 		client: c,
 	}
@@ -27,7 +27,7 @@ func (r *Redis) HSet(ctx context.Context, key string, data map[string]interface{
 	return r.client.HSet(ctx, key, data)
 }
 
-func NewRedisClient(host string) *redisx.Client {
+func newRedisClient(host string) *redisx.Client {
 	logx.Infof("[CONIFG] [REDIS] addr:%s", host)
 
 	return redisx.NewClient(&redis.Options{

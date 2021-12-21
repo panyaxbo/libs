@@ -2,36 +2,29 @@ package ekycconfigx
 
 import (
 	"context"
+	"errors"
+	"strings"
 
 	"github.com/panyaxbo/libs/logx"
 )
 
 type EkycConfig struct {
-	// redisHost string
-	// redisPort string
 	env string
-	key string
 }
 
-func NewEkycConfig(env string, key string) *EkycConfig {
-	return &EkycConfig{env, key}
+func NewEkycConfig(env string) *EkycConfig {
+	return &EkycConfig{env}
 }
 
-func (e *EkycConfig) GetEKYCConfigValueByKey(ctx context.Context, env, key string) (string, error) {
-	host := ""
-	if env == "loc" {
-		host = redisHost["redisHostLocal"]
-	} else if env == "dev" {
-		host = redisHost["redisHostDev"]
-	} else if env == "uat" {
-		host = redisHost["redisHostUat"]
-	} else if env == "prd" {
-		host = redisHost["redisHostProd"]
+func (e *EkycConfig) GetEKYCConfigValueByKey(ctx context.Context, key string) (string, error) {
+	if e.env == "" {
+		return "", errors.New("Please specify environment to get config from redis")
 	}
+	host := e.checkHostFromEnvironment(e.env)
 
 	logx.WithSeverityInfo(ctx).Infof("host %s", host)
 
-	r := NewRedis(NewRedisClient(host))
+	r := newRedis(newRedisClient(host))
 
 	val, err := r.HGet(ctx, ekycDB, key)
 	if err != nil {
@@ -41,21 +34,15 @@ func (e *EkycConfig) GetEKYCConfigValueByKey(ctx context.Context, env, key strin
 	return val, nil
 }
 
-func (e *EkycConfig) GetDipchipConfigValueByKey(ctx context.Context, env, key string) (string, error) {
-	host := ""
-	if env == "loc" {
-		host = redisHost["redisHostLocal"]
-	} else if env == "dev" {
-		host = redisHost["redisHostDev"]
-	} else if env == "uat" {
-		host = redisHost["redisHostUat"]
-	} else if env == "prd" {
-		host = redisHost["redisHostProd"]
+func (e *EkycConfig) GetDipchipConfigValueByKey(ctx context.Context, key string) (string, error) {
+	if e.env == "" {
+		return "", errors.New("Please specify environment to get config from redis")
 	}
+	host := e.checkHostFromEnvironment(e.env)
 
 	logx.WithSeverityInfo(ctx).Infof("host %s", host)
 
-	r := NewRedis(NewRedisClient(host))
+	r := newRedis(newRedisClient(host))
 
 	val, err := r.HGet(ctx, dipchipDB, key)
 
@@ -64,4 +51,19 @@ func (e *EkycConfig) GetDipchipConfigValueByKey(ctx context.Context, env, key st
 	}
 
 	return val, nil
+}
+
+func (e *EkycConfig) checkHostFromEnvironment(env string) string {
+	host := ""
+	if strings.EqualFold(e.env, "loc") || strings.EqualFold(e.env, "local") {
+		host = redisHost["redisHostLocal"]
+	} else if strings.EqualFold(e.env, "dev") || strings.EqualFold(e.env, "develop") {
+		host = redisHost["redisHostDev"]
+	} else if strings.EqualFold(e.env, "uat") {
+		host = redisHost["redisHostUat"]
+	} else if strings.EqualFold(e.env, "prd") || strings.EqualFold(e.env, "prod") || strings.EqualFold(e.env, "production") {
+		host = redisHost["redisHostProd"]
+	}
+
+	return host
 }
