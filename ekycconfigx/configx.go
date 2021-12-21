@@ -10,8 +10,11 @@ type EkycConfig struct {
 	// redisHost string
 	// redisPort string
 	env string
-	db  string
 	key string
+}
+
+func NewEkycConfig(env string, key string) *EkycConfig {
+	return &EkycConfig{env, key}
 }
 
 func (e *EkycConfig) GetEKYCConfigValueByKey(ctx context.Context, env, key string) (string, error) {
