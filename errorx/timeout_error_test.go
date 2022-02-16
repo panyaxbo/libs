@@ -11,7 +11,7 @@ import (
 func TestMockTimeoutError(t *testing.T) {
 	err := mockTimeout()
 	if err != nil {
-		fmt.Printf("%s", err.Error())
+		fmt.Printf("%s\n", err.Error())
 		assert.True(t, true)
 	}
 
@@ -25,5 +25,5 @@ func TestCheckMockTimeoutError(t *testing.T) {
 
 }
 func mockTimeout() error {
-	return TimeoutError{}
+	return &TimeoutError{}
 }
