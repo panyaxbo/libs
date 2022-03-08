@@ -110,7 +110,7 @@ func RequestID() echo.MiddlewareFunc {
 	}
 }
 
-func Logger(config Config) echo.MiddlewareFunc {
+func Logger(config *Config) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if DefaultSkipper(c) {
@@ -128,7 +128,7 @@ func Logger(config Config) echo.MiddlewareFunc {
 			req.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
 			if config.isMaskingLog() {
-				m := jsonmask.Init([]string{"citizenId", "identifierNumber", "laserId", "chipId", "firstnameTh"}) //optional
+				m := jsonmask.Init(sensitiveFields) //optional
 				t, err := m.Json(b)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
@@ -137,6 +137,11 @@ func Logger(config Config) echo.MiddlewareFunc {
 				logx.WithContext(ctx).WithFields(logrus.Fields{
 					"header": req.Header,
 					"body":   logx.LimitMSGByte([]byte(*t)),
+				}).Info("echo request information")
+			} else {
+				logx.WithContext(ctx).WithFields(logrus.Fields{
+					"header": req.Header,
+					"body":   logx.LimitMSGByte(b),
 				}).Info("echo request information")
 			}
 			resBody := new(bytes.Buffer)
