@@ -16,6 +16,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/panyaxbo/libs/contextx"
 	"github.com/panyaxbo/libs/logx"
+	"github.com/rkritchat/jsonmask"
 	"github.com/sirupsen/logrus"
 )
 
@@ -25,6 +26,22 @@ var (
 		return c.Path() == "/health"
 	}
 )
+
+type Config struct {
+	IsMaskingLog bool
+	IsSkipLog    bool
+}
+
+func NewConfig(isMaskingLog bool) *Config {
+	return &Config{IsMaskingLog: isMaskingLog}
+}
+
+func (c *Config) isMaskingLog() bool {
+	if c.IsMaskingLog {
+		return true
+	}
+	return false
+}
 
 // Skipper skip middleware
 type Skipper func(c echo.Context) bool
@@ -93,7 +110,7 @@ func RequestID() echo.MiddlewareFunc {
 	}
 }
 
-func Logger() echo.MiddlewareFunc {
+func Logger(config Config) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if DefaultSkipper(c) {
@@ -110,11 +127,18 @@ func Logger() echo.MiddlewareFunc {
 			}
 			req.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
-			logx.WithContext(ctx).WithFields(logrus.Fields{
-				"header": req.Header,
-				"body":   logx.LimitMSGByte(b),
-			}).Info("echo request information")
-
+			if config.isMaskingLog() {
+				m := jsonmask.Init([]string{"citizenId", "identifierNumber", "laserId", "chipId", "firstnameTh"}) //optional
+				t, err := m.Json(b)
+				if err != nil {
+					logx.WithContext(ctx).Panicf("%s", err)
+				}
+				//	fmt.Println(string([]byte(*t)))
+				logx.WithContext(ctx).WithFields(logrus.Fields{
+					"header": req.Header,
+					"body":   logx.LimitMSGByte([]byte(*t)),
+				}).Info("echo request information")
+			}
 			resBody := new(bytes.Buffer)
 			mw := io.MultiWriter(res.Writer, resBody)
 			writer := &bodyDumpResponseWriter{Writer: mw, ResponseWriter: res.Writer}
