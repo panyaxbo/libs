@@ -128,12 +128,11 @@ func Logger(config *Config) echo.MiddlewareFunc {
 			req.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
 			if config.isMaskingLog() {
-				m := jsonmask.Init(sensitiveFields) //optional
+				m := jsonmask.Init(sensitiveFields)
 				t, err := m.Json(b)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
 				}
-				//	fmt.Println(string([]byte(*t)))
 				logx.WithContext(ctx).WithFields(logrus.Fields{
 					"header": req.Header,
 					"body":   logx.LimitMSGByte([]byte(*t)),
@@ -155,18 +154,37 @@ func Logger(config *Config) echo.MiddlewareFunc {
 			}
 
 			duration := time.Since(start)
-			logx.WithContext(ctx).WithFields(logrus.Fields{
-				"header":          res.Header(),
-				"body":            logx.LimitMSGByte(resBody.Bytes()),
-				"method":          req.Method,
-				"host":            req.Host,
-				"path_uri":        req.RequestURI,
-				"remote_ip":       c.RealIP(),
-				"status":          res.Status,
-				"duration_string": duration.String(),
-				"duration":        duration,
-			}).Info("echo response information")
 
+			if config.isMaskingLog() {
+				m := jsonmask.Init(sensitiveFields)
+				t, err := m.Json(resBody.Bytes())
+				if err != nil {
+					logx.WithContext(ctx).Panicf("%s", err)
+				}
+				logx.WithContext(ctx).WithFields(logrus.Fields{
+					"header":          res.Header(),
+					"body":            logx.LimitMSGByte([]byte(*t)),
+					"method":          req.Method,
+					"host":            req.Host,
+					"path_uri":        req.RequestURI,
+					"remote_ip":       c.RealIP(),
+					"status":          res.Status,
+					"duration_string": duration.String(),
+					"duration":        duration,
+				}).Info("echo response information")
+			} else {
+				logx.WithContext(ctx).WithFields(logrus.Fields{
+					"header":          res.Header(),
+					"body":            logx.LimitMSGByte(resBody.Bytes()),
+					"method":          req.Method,
+					"host":            req.Host,
+					"path_uri":        req.RequestURI,
+					"remote_ip":       c.RealIP(),
+					"status":          res.Status,
+					"duration_string": duration.String(),
+					"duration":        duration,
+				}).Info("echo response information")
+			}
 			return nil
 		}
 	}
