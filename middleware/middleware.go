@@ -28,16 +28,22 @@ var (
 )
 
 type Config struct {
-	IsMaskingLog bool
-	IsSkipLog    bool
+	IsMaskLog bool
+	IsSkipLog bool
 }
 
-func NewConfig(isMaskingLog bool) *Config {
-	return &Config{IsMaskingLog: isMaskingLog}
+func NewConfig(IsMaskLog bool, IsSkipLog bool) *Config {
+	return &Config{IsMaskLog: IsMaskLog, IsSkipLog: IsSkipLog}
 }
 
 func (c *Config) isMaskingLog() bool {
-	if c.IsMaskingLog {
+	if c.IsMaskLog {
+		return true
+	}
+	return false
+}
+func (c *Config) isSkipLog() bool {
+	if c.IsSkipLog {
 		return true
 	}
 	return false
@@ -137,6 +143,7 @@ func Logger(config *Config) echo.MiddlewareFunc {
 					"header": req.Header,
 					"body":   logx.LimitMSGByte([]byte(*t)),
 				}).Info("echo request information")
+			} else if config.isSkipLog() {
 			} else {
 				logx.WithContext(ctx).WithFields(logrus.Fields{
 					"header": req.Header,
@@ -172,6 +179,7 @@ func Logger(config *Config) echo.MiddlewareFunc {
 					"duration_string": duration.String(),
 					"duration":        duration,
 				}).Info("echo response information")
+			} else if config.isSkipLog() {
 			} else {
 				logx.WithContext(ctx).WithFields(logrus.Fields{
 					"header":          res.Header(),
