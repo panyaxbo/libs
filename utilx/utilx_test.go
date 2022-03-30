@@ -1,7 +1,6 @@
 package utilx
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -22,6 +21,6 @@ func TestNotValidThaiNationalID(t *testing.T) {
 	assert.False(t, false, a)
 
 	b := IsValidThaiNationalID("AA343434343434")
-	fmt.Printf("TestNotValidThaiNationalID b %t", b)
+	//	fmt.Printf("TestNotValidThaiNationalID b %t", b)
 	assert.False(t, false, b)
 }

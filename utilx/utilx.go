@@ -55,7 +55,7 @@ func IsErrorTimeout(err error) bool {
 }
 
 func IsValidThaiNationalID(id string) bool {
-	matched, _ := regexp.MatchString(`/^[0-9]{13}$/g`, id)
+	matched, _ := regexp.MatchString(`^[0-9]{13}`, id)
 	if !matched {
 		return false
 	}
@@ -65,7 +65,7 @@ func IsValidThaiNationalID(id string) bool {
 		sum += v * (13 - i)
 	}
 	var checkSum = (11 - sum%11) % 10
-	charAt12, _ := strconv.Atoi(id[11:12])
+	charAt12, _ := strconv.Atoi(id[12:13])
 	if checkSum == charAt12 {
 		return true
 	}
