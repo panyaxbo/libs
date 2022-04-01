@@ -1,6 +1,7 @@
 package utilx
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -23,4 +24,19 @@ func TestNotValidThaiNationalID(t *testing.T) {
 	b := IsValidThaiNationalID("AA343434343434")
 	//	fmt.Printf("TestNotValidThaiNationalID b %t", b)
 	assert.False(t, false, b)
+}
+
+func TestValidEmail(t *testing.T) {
+	var addresses = []string{
+		"foo@gmail.com",
+		"Gopher <from@example.com>",
+		"example",
+	}
+	for _, a := range addresses {
+		if ok := IsValidEmail(a); ok {
+			fmt.Printf("value: %-30s valid email: %-10t address: %s\n", a, ok, "")
+		} else {
+			fmt.Printf("value: %-30s valid email: %-10t\n", a, ok)
+		}
+	}
 }

@@ -3,6 +3,7 @@ package utilx
 import (
 	"encoding/json"
 	"net"
+	"net/mail"
 	"net/url"
 	"os"
 	"regexp"
@@ -70,4 +71,12 @@ func IsValidThaiNationalID(id string) bool {
 		return true
 	}
 	return false
+}
+
+func IsValidEmail(address string) bool {
+	_, err := mail.ParseAddress(address)
+	if err != nil {
+		return false
+	}
+	return true
 }
