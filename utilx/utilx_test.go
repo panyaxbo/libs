@@ -30,7 +30,7 @@ func TestValidEmail(t *testing.T) {
 	var addresses = []string{
 		"foo@gmail.com",
 		"Gopher <from@example.com>",
-		"example",
+		"example@aaaa",
 	}
 	for _, a := range addresses {
 		if ok := IsValidEmail(a); ok {

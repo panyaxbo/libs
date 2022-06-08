@@ -3,7 +3,6 @@ package utilx
 import (
 	"encoding/json"
 	"net"
-	"net/mail"
 	"net/url"
 	"os"
 	"regexp"
@@ -74,9 +73,10 @@ func IsValidThaiNationalID(id string) bool {
 }
 
 func IsValidEmail(address string) bool {
-	_, err := mail.ParseAddress(address)
-	if err != nil {
-		return false
-	}
-	return true
+	return isEmailValid(address)
+}
+
+func isEmailValid(e string) bool {
+	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+	return emailRegex.MatchString(e)
 }
