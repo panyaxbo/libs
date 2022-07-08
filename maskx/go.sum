@@ -1,0 +1,15 @@
+gitdev.devops.krungthai.com/core-services/core-service-lib/contextx.git v0.0.1 h1:YvAYf7VYVoxKUeClPlXZTUeqN5vmFNG/msFJ7tEJH0A=
+gitdev.devops.krungthai.com/core-services/core-service-lib/contextx.git v0.0.1/go.mod h1:q6daBJz3i8sA8b57MrY2kjtwOsz/Pvz8Nl6ullYH73g=
+gitdev.devops.krungthai.com/core-services/core-service-lib/logx.git v0.0.5 h1:zkTKAoCHjP6YU1CKY4mhwauBGlxaHUXgOWjm71hfoLk=
+gitdev.devops.krungthai.com/core-services/core-service-lib/logx.git v0.0.5/go.mod h1:I4rtuiUtpi7oW+UIEFlRU8Vne3XLRZMCks8Y8I5ajB4=
+github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
+github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE=
+github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
+github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
+golang.org/x/sys v0.0.0-20191026070338-33540a1f6037 h1:YyJpGZS1sBuBCzLAR1VEpK193GlqGZbnPFnPV/5Rsb4=
+golang.org/x/sys v0.0.0-20191026070338-33540a1f6037/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
