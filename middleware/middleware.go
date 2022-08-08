@@ -16,7 +16,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/panyaxbo/libs/contextx"
 	"github.com/panyaxbo/libs/logx"
-	"github.com/rkritchat/jsonmask"
+	"github.com/panyaxbo/libs/maskx"
 	"github.com/sirupsen/logrus"
 )
 
@@ -28,26 +28,19 @@ var (
 )
 
 type Config struct {
-	IsMaskLog bool
-	IsSkipLog bool
+	isMaskLog bool
 }
 
-func NewConfig(IsMaskLog bool, IsSkipLog bool) *Config {
-	return &Config{IsMaskLog: IsMaskLog, IsSkipLog: IsSkipLog}
+func (c *Config) isMaskingLog(symbol string) {
+	c.isMaskLog = true
 }
 
-func (c *Config) isMaskingLog() bool {
-	if c.IsMaskLog {
-		return true
-	}
-	return false
-}
-func (c *Config) isSkipLog() bool {
-	if c.IsSkipLog {
-		return true
-	}
-	return false
-}
+// func (c *Config) isSkipLog() bool {
+// 	if c.IsSkipLog {
+// 		return true
+// 	}
+// 	return false
+// }
 
 // Skipper skip middleware
 type Skipper func(c echo.Context) bool
@@ -132,9 +125,11 @@ func Logger(config *Config) echo.MiddlewareFunc {
 				b, _ = ioutil.ReadAll(req.Body)
 			}
 			req.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			//var maskingInstance = NewMaskTool()
+			//	maskTool := NewMaskTool(filter.FieldFilter("identifier"))
 
-			if config.isMaskingLog() {
-				m := jsonmask.Init(sensitiveFields)
+			if config.isMaskLog {
+				m := maskx.Init(sensitiveFields)
 				t, err := m.Json(b)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
@@ -143,7 +138,6 @@ func Logger(config *Config) echo.MiddlewareFunc {
 					"header": req.Header,
 					"body":   logx.LimitMSGByte([]byte(*t)),
 				}).Info("echo request information")
-			} else if config.isSkipLog() {
 			} else {
 				logx.WithContext(ctx).WithFields(logrus.Fields{
 					"header": req.Header,
@@ -162,8 +156,8 @@ func Logger(config *Config) echo.MiddlewareFunc {
 
 			duration := time.Since(start)
 
-			if config.isMaskingLog() {
-				m := jsonmask.Init(sensitiveFields)
+			if config.isMaskLog {
+				m := maskx.Init(sensitiveFields)
 				t, err := m.Json(resBody.Bytes())
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
@@ -179,7 +173,6 @@ func Logger(config *Config) echo.MiddlewareFunc {
 					"duration_string": duration.String(),
 					"duration":        duration,
 				}).Info("echo response information")
-			} else if config.isSkipLog() {
 			} else {
 				logx.WithContext(ctx).WithFields(logrus.Fields{
 					"header":          res.Header(),

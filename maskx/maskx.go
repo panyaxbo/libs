@@ -4,20 +4,33 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/panyaxbo/libs/logx"
+	"github.com/spf13/viper"
 )
 
 var defaultSensitiveData = []string{
 	"name",
 	"surName",
 	"firstName",
+	"firstNameTh",
+	"firstNameEn",
 	"lastName",
+	"lastNameTh",
+	"lastNameEn",
+	"citizenId",
+	"passport",
+	"passportNo",
 	"identification",
 	"national",
+	"nationality",
 	"card",
+	"cardNo",
 	"phone",
 	"phoneNo",
 	"number",
@@ -25,8 +38,15 @@ var defaultSensitiveData = []string{
 	"password",
 	"email",
 	"address",
-	"phoneNo",
+	"accountNo",
+	"dateOfBirth",
+	"dob",
+	"dateOfBirthTh",
+	"dateOfBirthEn",
 }
+var (
+	gcmUat = NewAES([]byte(viper.GetString("crypto.aeskey")), []byte(viper.GetString("crypto.aesnonce")))
+)
 
 type Mask interface {
 	Json(b []byte) (*string, error)
@@ -44,6 +64,21 @@ func Init(fields ...[]string) Mask {
 	return &mask{
 		sensitiveField: f,
 	}
+}
+
+func init() {
+	viper.AddConfigPath(".")
+
+	if err := viper.ReadInConfig(); err != nil {
+		logx.Panic(err)
+	}
+
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	runtime.GOMAXPROCS(1)
+
+	logx.Init(viper.GetString("log.level"), viper.GetString("log.env"))
 }
 
 func (m mask) Json(b []byte) (*string, error) {
@@ -133,29 +168,32 @@ func randomMask(c string) string {
 	if len(c) == 0 {
 		return c
 	}
-	var r = []rune(c)
-	var cl = len(r)
-	var size = initMaskSize(cl)
-	var count int
-	raffle := make(map[int]int, size)
-	for i := 0; i < cl; i++ {
-		count += 1 //avoid random forever
-		if len(raffle) == size || count == 10 {
-			//break if mask enough
-			break
-		}
-		v := randPos(cl)
-		if _, ok := raffle[v]; ok {
-			i -= 1
-			continue
-		}
-		//case not mask yet
-		if len(r)-1 >= v {
-			r[v] = '*'
-			raffle[v] = v
-		}
-	}
-	return string(r)
+	// var r = []rune(c)
+	// var cl = len(r)
+	// var size = initMaskSize(cl)
+	// var count int
+	// raffle := make(map[int]int, size)
+	// for i := 0; i < cl; i++ {
+	// 	count += 1 //avoid random forever
+	// 	if len(raffle) == size || count == 10 {
+	// 		//break if mask enough
+	// 		break
+	// 	}
+	// 	v := randPos(cl)
+	// 	if _, ok := raffle[v]; ok {
+	// 		i -= 1
+	// 		continue
+	// 	}
+	// 	//case not mask yet
+	// 	if len(r)-1 >= v {
+	// 		r[v] = '*'
+	// 		raffle[v] = v
+	// 	}
+	// }
+	// return string(r)
+
+	return gcmUat.Encrypt(c)
+
 }
 
 func randPos(max int) int {

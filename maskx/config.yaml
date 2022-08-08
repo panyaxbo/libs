@@ -1,0 +1,15 @@
+crypto:
+  ekyc:
+    uat:
+      aeskey: thisisaeskey16bt
+      aesnonce: thisisnoncee
+    prd:
+      aeskey: thisisaeskey16bt
+      aesnonce: thisisnoncee
+  cdi:
+    uat:
+      aeskey: thisisaeskey16bt
+      aesnonce: thisisnoncee
+    prd:
+      aeskey: thisisaeskey16bt
+      aesnonce: thisisnoncee
