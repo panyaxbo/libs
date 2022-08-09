@@ -2,8 +2,6 @@ module github.com/panyaxbo/libs/maskx
 
 go 1.17
 
-require github.com/rkritchat/jsonmask v0.0.0-20220312135010-71c7707760ff
-
 require (
 	github.com/panyaxbo/libs/logx v0.0.29
 	github.com/pkg/errors v0.9.1

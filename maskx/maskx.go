@@ -44,16 +44,19 @@ var defaultSensitiveData = []string{
 	"dateOfBirthTh",
 	"dateOfBirthEn",
 }
-var (
-	gcmUat = NewAES([]byte(viper.GetString("crypto.aeskey")), []byte(viper.GetString("crypto.aesnonce")))
-)
+
+// var (
+// 	gcmUat = NewAES([]byte(viper.GetString("crypto.ekyc.uat.aeskey")), []byte(viper.GetString("crypto.ekyc.uat.aesnonce")))
+// )
 
 type Mask interface {
-	Json(b []byte) (*string, error)
+	Json(b []byte, env string) (*string, error)
 }
 
 type mask struct {
 	sensitiveField []string
+	gcmUat         *AES
+	gcmPrd         *AES
 }
 
 func Init(fields ...[]string) Mask {
@@ -61,8 +64,12 @@ func Init(fields ...[]string) Mask {
 	if len(fields) > 0 {
 		f = append(f, fields[0]...)
 	}
+	uat := NewAES([]byte(viper.GetString("crypto.uat.aeskey")), []byte(viper.GetString("crypto.uat.aesnonce")))
+	prd := NewAES([]byte(viper.GetString("crypto.prd.aeskey")), []byte(viper.GetString("crypto.prd.aesnonce")))
 	return &mask{
 		sensitiveField: f,
+		gcmUat:         uat,
+		gcmPrd:         prd,
 	}
 }
 
@@ -81,7 +88,7 @@ func init() {
 	logx.Init(viper.GetString("log.level"), viper.GetString("log.env"))
 }
 
-func (m mask) Json(b []byte) (*string, error) {
+func (m mask) Json(b []byte, env string) (*string, error) {
 	var storage []interface{}
 	p := make(chan bool, 10)
 	var wg sync.WaitGroup
@@ -92,7 +99,7 @@ func (m mask) Json(b []byte) (*string, error) {
 		return nil, err
 	}
 	wg.Wait()
-	return masking(b, storage)
+	return m.masking(b, storage, env)
 }
 
 //walkThrough will recursive until no more array or map
@@ -153,18 +160,22 @@ func (m mask) sensitive(k string, v interface{}, storage *[]interface{}) {
 	}
 }
 
-func masking(j []byte, d []interface{}) (*string, error) {
+func (m mask) masking(j []byte, d []interface{}, env string) (*string, error) {
 	body := string(j)
 	if len(d) == 0 {
 		return &body, nil
 	}
 	for _, val := range d {
-		body = strings.ReplaceAll(body, typeCasting(val.(interface{})), randomMask(typeCasting(val.(interface{}))))
+		if strings.EqualFold(env, "prd") || strings.EqualFold(env, "prod") || strings.EqualFold(env, "production") {
+			body = strings.ReplaceAll(body, typeCasting(val.(interface{})), randomMask(m.gcmPrd, typeCasting(val.(interface{}))))
+		} else {
+			body = strings.ReplaceAll(body, typeCasting(val.(interface{})), randomMask(m.gcmUat, typeCasting(val.(interface{}))))
+		}
 	}
 	return &body, nil
 }
 
-func randomMask(c string) string {
+func randomMask(gcm *AES, c string) string {
 	if len(c) == 0 {
 		return c
 	}
@@ -191,8 +202,7 @@ func randomMask(c string) string {
 	// 	}
 	// }
 	// return string(r)
-
-	return gcmUat.Encrypt(c)
+	return gcm.Encrypt(c)
 
 }
 
