@@ -313,8 +313,8 @@ github.com/panyaxbo/libs/contextx v0.0.5 h1:cAcNtmYpXFbezoUcwiDChj+8zr15JI7m8HAH
 github.com/panyaxbo/libs/contextx v0.0.5/go.mod h1:SB6OyBx2dbSfX+EdD60El7ckEBS1Rx/leGqSHUvDOrY=
 github.com/panyaxbo/libs/logx v0.0.29 h1:jhJZf+nhxm4PXhgfYtkQi52/gdmt9ApEFzEWm/0T1KQ=
 github.com/panyaxbo/libs/logx v0.0.29/go.mod h1:N7VueLRWWBb7s7Xawl2sgqNy6SH2tUKiRqyqkOiRytc=
-github.com/panyaxbo/libs/maskx v0.0.3 h1:UcnKBDSzQIuy29SGH0PBHv2E3297DG3vSPbVWkVEYYQ=
-github.com/panyaxbo/libs/maskx v0.0.3/go.mod h1:vb6RuS5eKAdHONJxpAVYbN8jupJqHfOW7Tb7JkSyhUs=
+github.com/panyaxbo/libs/maskx v0.0.4 h1:BmuGkqkGZXA6lfBfkRUeIALkO2PYqYIONZKqouFWTcg=
+github.com/panyaxbo/libs/maskx v0.0.4/go.mod h1:vb6RuS5eKAdHONJxpAVYbN8jupJqHfOW7Tb7JkSyhUs=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.9.5 h1:4yBQzkHv+7BHq2PQUZF3Mx0IYxG7LsP222s7Agd3ve8=
