@@ -1,7 +1,0 @@
-crypto:
-  uat:
-    aeskey: thisisaeskey16bt
-    aesnonce: thisisnoncee
-  prd:
-    aeskey: kbcptgpm5OegmJN7
-    aesnonce: nlOqfSqvdTj8

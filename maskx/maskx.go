@@ -66,8 +66,8 @@ func Init(fields ...[]string) Mask {
 	if len(fields) > 0 {
 		f = append(f, fields[0]...)
 	}
-	uat := NewAES([]byte(viper.GetString("crypto.uat.aeskey")), []byte(viper.GetString("crypto.uat.aesnonce")))
-	prd := NewAES([]byte(viper.GetString("crypto.prd.aeskey")), []byte(viper.GetString("crypto.prd.aesnonce")))
+	uat := NewAES([]byte("thisisaeskey16bt"), []byte("thisisnoncee"))
+	prd := NewAES([]byte("kbcptgpm5OegmJN7"), []byte("nlOqfSqvdTj8"))
 	return &mask{
 		sensitiveField: f,
 		gcmUat:         uat,
