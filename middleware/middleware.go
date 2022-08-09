@@ -28,11 +28,13 @@ var (
 )
 
 type Config struct {
-	isMaskLog bool
+	withMaskLogWithEncrypt bool
+	withMaskLogWithSymbol  bool
+	Env                    string
 }
 
-func (c *Config) isMaskingLog(symbol string) {
-	c.isMaskLog = true
+func (c *Config) WithMaskingLogWithEncrypted(env string) {
+	c.withMaskLogWithEncrypt = true
 }
 
 // func (c *Config) isSkipLog() bool {
@@ -85,6 +87,10 @@ func RecoverWithConfig(config middleware.RecoverConfig) echo.MiddlewareFunc {
 	}
 }
 
+// func MaskLogWithEncrypt() echo.MiddlewareFunc {
+
+// }
+
 // RequestID returns a X-Request-ID middleware.
 func RequestID() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -128,9 +134,9 @@ func Logger(config *Config) echo.MiddlewareFunc {
 			//var maskingInstance = NewMaskTool()
 			//	maskTool := NewMaskTool(filter.FieldFilter("identifier"))
 
-			if config.isMaskLog {
+			if config.withMaskLogWithEncrypt {
 				m := maskx.Init(sensitiveFields)
-				t, err := m.Json(b)
+				t, err := m.Json(b, config.Env)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
 				}
@@ -156,9 +162,9 @@ func Logger(config *Config) echo.MiddlewareFunc {
 
 			duration := time.Since(start)
 
-			if config.isMaskLog {
+			if config.withMaskLogWithEncrypt {
 				m := maskx.Init(sensitiveFields)
-				t, err := m.Json(resBody.Bytes())
+				t, err := m.Json(resBody.Bytes(), config.Env)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
 				}
