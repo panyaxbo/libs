@@ -31,10 +31,17 @@ type Config struct {
 	withMaskLogWithEncrypt bool
 	withMaskLogWithSymbol  bool
 	Env                    string
+	Symbol                 string
 }
 
 func (c *Config) WithMaskingLogWithEncrypted(env string) {
 	c.withMaskLogWithEncrypt = true
+	c.Env = env
+}
+
+func (c *Config) WithMaskingLogWithSymbol(symbol string) {
+	c.withMaskLogWithSymbol = true
+	c.Symbol = symbol
 }
 
 // func (c *Config) isSkipLog() bool {
@@ -115,7 +122,59 @@ func RequestID() echo.MiddlewareFunc {
 	}
 }
 
-func Logger(config *Config) echo.MiddlewareFunc {
+func Logger() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			if DefaultSkipper(c) {
+				return next(c)
+			}
+
+			req := c.Request()
+			res := c.Response()
+			ctx := req.Context()
+
+			b := make([]byte, 0)
+			if req.Body != nil {
+				b, _ = ioutil.ReadAll(req.Body)
+			}
+			req.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			//var maskingInstance = NewMaskTool()
+			//	maskTool := NewMaskTool(filter.FieldFilter("identifier"))
+
+			logx.WithContext(ctx).WithFields(logrus.Fields{
+				"header": req.Header,
+				"body":   logx.LimitMSGByte(b),
+			}).Info("echo request information")
+
+			resBody := new(bytes.Buffer)
+			mw := io.MultiWriter(res.Writer, resBody)
+			writer := &bodyDumpResponseWriter{Writer: mw, ResponseWriter: res.Writer}
+			res.Writer = writer
+
+			start := time.Now()
+			if err := next(c); err != nil {
+				c.Error(err)
+			}
+
+			duration := time.Since(start)
+
+			logx.WithContext(ctx).WithFields(logrus.Fields{
+				"header":          res.Header(),
+				"body":            logx.LimitMSGByte(resBody.Bytes()),
+				"method":          req.Method,
+				"host":            req.Host,
+				"path_uri":        req.RequestURI,
+				"remote_ip":       c.RealIP(),
+				"status":          res.Status,
+				"duration_string": duration.String(),
+				"duration":        duration,
+			}).Info("echo response information")
+
+			return nil
+		}
+	}
+}
+func LoggerWithMasking(config *Config) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if DefaultSkipper(c) {
@@ -136,7 +195,17 @@ func Logger(config *Config) echo.MiddlewareFunc {
 
 			if config.withMaskLogWithEncrypt {
 				m := maskx.Init(sensitiveFields)
-				t, err := m.Json(b, config.Env)
+				t, err := m.JsonMaskEncrypted(b, config.Env)
+				if err != nil {
+					logx.WithContext(ctx).Panicf("%s", err)
+				}
+				logx.WithContext(ctx).WithFields(logrus.Fields{
+					"header": req.Header,
+					"body":   logx.LimitMSGByte([]byte(*t)),
+				}).Info("echo request information")
+			} else if config.withMaskLogWithSymbol {
+				m := maskx.Init(sensitiveFields)
+				t, err := m.JsonMaskSymbol(b, config.Symbol)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
 				}
@@ -164,7 +233,24 @@ func Logger(config *Config) echo.MiddlewareFunc {
 
 			if config.withMaskLogWithEncrypt {
 				m := maskx.Init(sensitiveFields)
-				t, err := m.Json(resBody.Bytes(), config.Env)
+				t, err := m.JsonMaskEncrypted(resBody.Bytes(), config.Env)
+				if err != nil {
+					logx.WithContext(ctx).Panicf("%s", err)
+				}
+				logx.WithContext(ctx).WithFields(logrus.Fields{
+					"header":          res.Header(),
+					"body":            logx.LimitMSGByte([]byte(*t)),
+					"method":          req.Method,
+					"host":            req.Host,
+					"path_uri":        req.RequestURI,
+					"remote_ip":       c.RealIP(),
+					"status":          res.Status,
+					"duration_string": duration.String(),
+					"duration":        duration,
+				}).Info("echo response information")
+			} else if config.withMaskLogWithSymbol {
+				m := maskx.Init(sensitiveFields)
+				t, err := m.JsonMaskSymbol(resBody.Bytes(), config.Symbol)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
 				}
