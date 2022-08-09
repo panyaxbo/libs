@@ -61,6 +61,8 @@ type mask struct {
 
 func Init(fields ...[]string) Mask {
 	var f = defaultSensitiveData
+
+	initConfig()
 	if len(fields) > 0 {
 		f = append(f, fields[0]...)
 	}
@@ -73,7 +75,7 @@ func Init(fields ...[]string) Mask {
 	}
 }
 
-func init() {
+func initConfig() {
 	viper.AddConfigPath(".")
 
 	if err := viper.ReadInConfig(); err != nil {
