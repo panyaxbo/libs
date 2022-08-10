@@ -42,10 +42,6 @@ var defaultSensitiveData = []string{
 	"dateOfBirthEn",
 }
 
-// var (
-// 	gcmUat = NewAES([]byte(viper.GetString("crypto.ekyc.uat.aeskey")), []byte(viper.GetString("crypto.ekyc.uat.aesnonce")))
-// )
-
 type Mask interface {
 	Json(b []byte) (*string, error)
 	JsonMaskEncrypted(b []byte, env string) (*string, error)
@@ -72,21 +68,6 @@ func Init(fields ...[]string) Mask {
 		gcmPrd:         prd,
 	}
 }
-
-// func initConfig() {
-// 	viper.AddConfigPath(".")
-
-// 	if err := viper.ReadInConfig(); err != nil {
-// 		logx.Panic(err)
-// 	}
-
-// 	viper.AutomaticEnv()
-// 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-
-// 	runtime.GOMAXPROCS(1)
-
-// 	logx.Init(viper.GetString("log.level"), viper.GetString("log.env"))
-// }
 
 func (m mask) Json(b []byte) (*string, error) {
 	var storage []interface{}

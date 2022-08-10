@@ -10,9 +10,21 @@ var j = []byte(`{"foo":1,"bar":2,"baz":[3,4],"phoneNo":123456789, "newField":"te
 
 func main() {
 	m := maskx.Init([]string{"newField"})
-	t, err := m.Json(j, "prd")
+	t1, err := m.JsonMaskEncrypted(j, "dev")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(*t)
+	fmt.Println(*t1)
+
+	t2, err := m.JsonMaskEncrypted(j, "dev")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(*t2)
+
+	t3, err := m.JsonMaskEncrypted(j, "prd")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(*t3)
 }
