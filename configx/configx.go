@@ -7,7 +7,7 @@ type ConfigMaskLog struct {
 	Symbol               string
 }
 
-func (c *ConfigMaskLog) WithMaskingLogWithEncrypted(env string) {
+func (c *ConfigMaskLog) WithMaskingLogWithEncrypt(env string) {
 	c.IsMaskLogWithEncrypt = true
 	c.Env = env
 }
