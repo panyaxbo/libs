@@ -1,6 +1,6 @@
 package configx
 
-var sensitiveFields = []string{
+var SensitiveFields = []string{
 	"citizenId",
 	"identifierNumber",
 	"identificationNumber",
@@ -21,9 +21,6 @@ var sensitiveFields = []string{
 	"lasstnameEn",
 	"engFName",
 	"engLName",
-	"customerId",
-	"cifNo",
-	"cif",
 	"dateOfBirthTh",
 	"dateOfBirthEn",
 	"homeAddressNo",
