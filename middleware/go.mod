@@ -8,6 +8,6 @@ require (
 	github.com/panyaxbo/libs/configx v0.0.4
 	github.com/panyaxbo/libs/contextx v0.0.5
 	github.com/panyaxbo/libs/logx v0.0.29
-	github.com/panyaxbo/libs/maskx v0.0.6
+	github.com/panyaxbo/libs/maskx v0.0.8
 	github.com/sirupsen/logrus v1.8.1
 )

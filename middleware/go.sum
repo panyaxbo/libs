@@ -23,8 +23,8 @@ github.com/panyaxbo/libs/contextx v0.0.5 h1:cAcNtmYpXFbezoUcwiDChj+8zr15JI7m8HAH
 github.com/panyaxbo/libs/contextx v0.0.5/go.mod h1:SB6OyBx2dbSfX+EdD60El7ckEBS1Rx/leGqSHUvDOrY=
 github.com/panyaxbo/libs/logx v0.0.29 h1:jhJZf+nhxm4PXhgfYtkQi52/gdmt9ApEFzEWm/0T1KQ=
 github.com/panyaxbo/libs/logx v0.0.29/go.mod h1:N7VueLRWWBb7s7Xawl2sgqNy6SH2tUKiRqyqkOiRytc=
-github.com/panyaxbo/libs/maskx v0.0.6 h1:U5J6tqA76waKJIC6+xNIVHWzhvuMAslmrmwkPEXx9OE=
-github.com/panyaxbo/libs/maskx v0.0.6/go.mod h1:vZw44js6L4+MpYAgxZdAR4hajhhxONLpo8JjV0GlPLY=
+github.com/panyaxbo/libs/maskx v0.0.8 h1:TGAmiQ+j+eNGytox8LjUg41YilhUVWboWDgJT5KagHU=
+github.com/panyaxbo/libs/maskx v0.0.8/go.mod h1:4G0viu7hriie0uCjviMXZTW9ekGuVCQxH8/VhO+86EY=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
