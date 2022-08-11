@@ -24,8 +24,6 @@ var defaultSensitiveData = []string{
 	"passport",
 	"passportNo",
 	"identification",
-	"national",
-	"nationality",
 	"card",
 	"cardNo",
 	"phone",
