@@ -17,6 +17,8 @@ github.com/mattn/go-isatty v0.0.9/go.mod h1:YNRxwqDuOph6SZLI9vUUz6OYw3QyUt7WiY2y
 github.com/mattn/go-isatty v0.0.12/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Kysco4FUpU=
 github.com/mattn/go-isatty v0.0.14 h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=
 github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
+github.com/panyaxbo/libs/configx v0.0.4 h1:IZrEFZMdGhxULaSk7Hpcs4TDgkD1a48W6yuDj5lOHGg=
+github.com/panyaxbo/libs/configx v0.0.4/go.mod h1:Gh1HJrBVKxpXboucWqSyXf8YxRiDYedT5NIdRb7s49s=
 github.com/panyaxbo/libs/contextx v0.0.5 h1:cAcNtmYpXFbezoUcwiDChj+8zr15JI7m8HAHjCdq/Vo=
 github.com/panyaxbo/libs/contextx v0.0.5/go.mod h1:SB6OyBx2dbSfX+EdD60El7ckEBS1Rx/leGqSHUvDOrY=
 github.com/panyaxbo/libs/logx v0.0.29 h1:jhJZf+nhxm4PXhgfYtkQi52/gdmt9ApEFzEWm/0T1KQ=

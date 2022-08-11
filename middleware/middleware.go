@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/panyaxbo/libs/configx"
 	"github.com/panyaxbo/libs/contextx"
 	"github.com/panyaxbo/libs/logx"
 	"github.com/panyaxbo/libs/maskx"
@@ -26,30 +27,6 @@ var (
 		return c.Path() == "/health"
 	}
 )
-
-type Config struct {
-	withMaskLogWithEncrypt bool
-	withMaskLogWithSymbol  bool
-	Env                    string
-	Symbol                 string
-}
-
-func (c *Config) WithMaskingLogWithEncrypted(env string) {
-	c.withMaskLogWithEncrypt = true
-	c.Env = env
-}
-
-func (c *Config) WithMaskingLogWithSymbol(symbol string) {
-	c.withMaskLogWithSymbol = true
-	c.Symbol = symbol
-}
-
-// func (c *Config) isSkipLog() bool {
-// 	if c.IsSkipLog {
-// 		return true
-// 	}
-// 	return false
-// }
 
 // Skipper skip middleware
 type Skipper func(c echo.Context) bool
@@ -94,10 +71,6 @@ func RecoverWithConfig(config middleware.RecoverConfig) echo.MiddlewareFunc {
 	}
 }
 
-// func MaskLogWithEncrypt() echo.MiddlewareFunc {
-
-// }
-
 // RequestID returns a X-Request-ID middleware.
 func RequestID() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -138,8 +111,6 @@ func Logger() echo.MiddlewareFunc {
 				b, _ = ioutil.ReadAll(req.Body)
 			}
 			req.Body = ioutil.NopCloser(bytes.NewBuffer(b))
-			//var maskingInstance = NewMaskTool()
-			//	maskTool := NewMaskTool(filter.FieldFilter("identifier"))
 
 			logx.WithContext(ctx).WithFields(logrus.Fields{
 				"header": req.Header,
@@ -174,7 +145,7 @@ func Logger() echo.MiddlewareFunc {
 		}
 	}
 }
-func LoggerWithMasking(config *Config) echo.MiddlewareFunc {
+func LoggerWithMasking(config *configx.ConfigMaskLog) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if DefaultSkipper(c) {
@@ -193,8 +164,8 @@ func LoggerWithMasking(config *Config) echo.MiddlewareFunc {
 			//var maskingInstance = NewMaskTool()
 			//	maskTool := NewMaskTool(filter.FieldFilter("identifier"))
 
-			if config.withMaskLogWithEncrypt {
-				m := maskx.Init(sensitiveFields)
+			if config.IsMaskLogWithEncrypt {
+				m := maskx.Init(configx.SensitiveFields)
 				t, err := m.JsonMaskEncrypted(b, config.Env)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
@@ -203,8 +174,8 @@ func LoggerWithMasking(config *Config) echo.MiddlewareFunc {
 					"header": req.Header,
 					"body":   logx.LimitMSGByte([]byte(*t)),
 				}).Info("echo request information")
-			} else if config.withMaskLogWithSymbol {
-				m := maskx.Init(sensitiveFields)
+			} else if config.IsMaskLogWithSymbol {
+				m := maskx.Init(configx.SensitiveFields)
 				t, err := m.JsonMaskSymbol(b, config.Symbol)
 				if err != nil {
 					logx.WithContext(ctx).Panicf("%s", err)
@@ -231,7 +202,7 @@ func LoggerWithMasking(config *Config) echo.MiddlewareFunc {
 
 			duration := time.Since(start)
 
-			if config.withMaskLogWithEncrypt {
+			if config.IsMaskLogWithEncrypt {
 				m := maskx.Init(sensitiveFields)
 				t, err := m.JsonMaskEncrypted(resBody.Bytes(), config.Env)
 				if err != nil {
@@ -248,7 +219,7 @@ func LoggerWithMasking(config *Config) echo.MiddlewareFunc {
 					"duration_string": duration.String(),
 					"duration":        duration,
 				}).Info("echo response information")
-			} else if config.withMaskLogWithSymbol {
+			} else if config.IsMaskLogWithSymbol {
 				m := maskx.Init(sensitiveFields)
 				t, err := m.JsonMaskSymbol(resBody.Bytes(), config.Symbol)
 				if err != nil {
