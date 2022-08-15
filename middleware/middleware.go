@@ -145,7 +145,7 @@ func Logger() echo.MiddlewareFunc {
 		}
 	}
 }
-func LoggerWithMasking(config *configx.ConfigMaskLog) echo.MiddlewareFunc {
+func LoggerWithMaskLog(config *configx.ConfigMaskLog) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if DefaultSkipper(c) {
@@ -165,25 +165,40 @@ func LoggerWithMasking(config *configx.ConfigMaskLog) echo.MiddlewareFunc {
 			//	maskTool := NewMaskTool(filter.FieldFilter("identifier"))
 
 			if config.IsMaskLogWithEncrypt {
-				m := maskx.Init(configx.SensitiveFields)
-				t, err := m.JsonMaskEncrypted(b, config.Env)
-				if err != nil {
-					logx.WithContext(ctx).Panicf("%s", err)
+				if req.Body != nil {
+					m := maskx.Init(configx.SensitiveFields)
+					t, err := m.JsonMaskEncrypted(b, config.Env)
+					if err != nil {
+						logx.WithContext(ctx).Panicf("%s", err)
+					}
+					logx.WithContext(ctx).WithFields(logrus.Fields{
+						"header": req.Header,
+						"body":   logx.LimitMSGByte([]byte(*t)),
+					}).Info("echo request information")
+				} else {
+					logx.WithContext(ctx).WithFields(logrus.Fields{
+						"header": req.Header,
+						"body":   logx.LimitMSGByte(b),
+					}).Info("echo request information")
 				}
-				logx.WithContext(ctx).WithFields(logrus.Fields{
-					"header": req.Header,
-					"body":   logx.LimitMSGByte([]byte(*t)),
-				}).Info("echo request information")
 			} else if config.IsMaskLogWithSymbol {
-				m := maskx.Init(configx.SensitiveFields)
-				t, err := m.JsonMaskSymbol(b, config.Symbol)
-				if err != nil {
-					logx.WithContext(ctx).Panicf("%s", err)
+				if req.Body != nil {
+					m := maskx.Init(configx.SensitiveFields)
+					t, err := m.JsonMaskSymbol(b, config.Symbol)
+					if err != nil {
+						logx.WithContext(ctx).Panicf("%s", err)
+					}
+					logx.WithContext(ctx).WithFields(logrus.Fields{
+						"header": req.Header,
+						"body":   logx.LimitMSGByte([]byte(*t)),
+					}).Info("echo request information")
+				} else {
+					logx.WithContext(ctx).WithFields(logrus.Fields{
+						"header": req.Header,
+						"body":   logx.LimitMSGByte(b),
+					}).Info("echo request information")
 				}
-				logx.WithContext(ctx).WithFields(logrus.Fields{
-					"header": req.Header,
-					"body":   logx.LimitMSGByte([]byte(*t)),
-				}).Info("echo request information")
+
 			} else {
 				logx.WithContext(ctx).WithFields(logrus.Fields{
 					"header": req.Header,
