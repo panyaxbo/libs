@@ -165,6 +165,7 @@ func LoggerWithMaskLog(config *configx.ConfigMaskLog) echo.MiddlewareFunc {
 			//	maskTool := NewMaskTool(filter.FieldFilter("identifier"))
 
 			if config.IsMaskLogWithEncrypt {
+				logx.WithContext(ctx).Infof("b is :%s", string(b))
 				if string(b) != "" || len(string(b)) <= 0 {
 					m := maskx.Init(configx.SensitiveFields)
 					t, err := m.JsonMaskEncrypted(b, config.Env)
@@ -182,6 +183,7 @@ func LoggerWithMaskLog(config *configx.ConfigMaskLog) echo.MiddlewareFunc {
 					}).Info("echo request information")
 				}
 			} else if config.IsMaskLogWithSymbol {
+				logx.WithContext(ctx).Infof("b is :%s", string(b))
 				if string(b) != "" || len(string(b)) <= 0 {
 					m := maskx.Init(configx.SensitiveFields)
 					t, err := m.JsonMaskSymbol(b, config.Symbol)
