@@ -9,6 +9,8 @@ import (
 	"sync"
 	"time"
 	"unicode/utf8"
+
+	"github.com/panyaxbo/libs/configx"
 )
 
 var defaultSensitiveData = []string{
@@ -32,7 +34,6 @@ var defaultSensitiveData = []string{
 	"username",
 	"password",
 	"email",
-	"address",
 	"accountNo",
 	"dateOfBirth",
 	"dob",
@@ -48,8 +49,8 @@ type Mask interface {
 
 type mask struct {
 	sensitiveField []string
-	gcmUat         *AES
-	gcmPrd         *AES
+	GcmUat         *AES
+	GcmPrd         *AES
 }
 
 func Init(fields ...[]string) Mask {
@@ -58,12 +59,12 @@ func Init(fields ...[]string) Mask {
 	if len(fields) > 0 {
 		f = append(f, fields[0]...)
 	}
-	uat := NewAES([]byte("thisisaeskey16bt"), []byte("thisisnoncee"))
-	prd := NewAES([]byte("kbcptgpm5OegmJN7"), []byte("nlOqfSqvdTj8"))
+	uat := NewAES([]byte(configx.CryptoGcmUatKey), []byte(configx.CryptoGcmUatNonce))
+	prd := NewAES([]byte(configx.CryptoGcmPrdKey), []byte(configx.CryptoGcmPrdNonce))
 	return &mask{
 		sensitiveField: f,
-		gcmUat:         uat,
-		gcmPrd:         prd,
+		GcmUat:         uat,
+		GcmPrd:         prd,
 	}
 }
 
@@ -158,7 +159,8 @@ func (m mask) next(v interface{}, storage *[]interface{}, p chan bool, wg *sync.
 }
 
 func (m mask) sensitive(k string, v interface{}, storage *[]interface{}) {
-	ok := strings.Contains(strings.ToLower(fmt.Sprint(m.sensitiveField)), strings.ToLower(k))
+	// ok := strings.Contains(strings.ToLower(fmt.Sprint(m.sensitiveField)), strings.ToLower(k))
+	ok := searchField(m.sensitiveField, k) //strings.EqualFold(strings.ToLower(fmt.Sprint(m.sensitiveField)), strings.ToLower(k))
 	if ok {
 		//append sensitive value to storage
 		*storage = append(*storage, v)
@@ -184,9 +186,9 @@ func (m mask) maskingWithEncrypted(j []byte, d []interface{}, env string) (*stri
 	}
 	for _, val := range d {
 		if strings.EqualFold(env, "prd") || strings.EqualFold(env, "prod") || strings.EqualFold(env, "production") {
-			body = strings.ReplaceAll(body, typeCasting(val.(interface{})), randomMaskEncrypted(m.gcmPrd, typeCasting(val.(interface{}))))
+			body = strings.ReplaceAll(body, typeCasting(val.(interface{})), randomMaskEncrypted(m.GcmPrd, typeCasting(val.(interface{}))))
 		} else {
-			body = strings.ReplaceAll(body, typeCasting(val.(interface{})), randomMaskEncrypted(m.gcmUat, typeCasting(val.(interface{}))))
+			body = strings.ReplaceAll(body, typeCasting(val.(interface{})), randomMaskEncrypted(m.GcmUat, typeCasting(val.(interface{}))))
 		}
 	}
 	return &body, nil
@@ -269,4 +271,13 @@ func typeCasting(d interface{}) string {
 	default:
 		return fmt.Sprint(d)
 	}
+}
+
+func searchField(s []string, k string) bool {
+	for i, _ := range s {
+		if s[i] == k {
+			return true
+		}
+	}
+	return false
 }
