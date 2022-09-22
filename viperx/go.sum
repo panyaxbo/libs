@@ -195,8 +195,8 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lN
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/panyaxbo/libs/contextx v0.0.5 h1:cAcNtmYpXFbezoUcwiDChj+8zr15JI7m8HAHjCdq/Vo=
 github.com/panyaxbo/libs/contextx v0.0.5/go.mod h1:SB6OyBx2dbSfX+EdD60El7ckEBS1Rx/leGqSHUvDOrY=
-github.com/panyaxbo/libs/logx v0.0.29 h1:jhJZf+nhxm4PXhgfYtkQi52/gdmt9ApEFzEWm/0T1KQ=
-github.com/panyaxbo/libs/logx v0.0.29/go.mod h1:N7VueLRWWBb7s7Xawl2sgqNy6SH2tUKiRqyqkOiRytc=
+github.com/panyaxbo/libs/logx v0.0.30 h1:YyZhXbpbSb8i86dweTzk5dV/qtY9L+5MnDenL7CM6yM=
+github.com/panyaxbo/libs/logx v0.0.30/go.mod h1:N7VueLRWWBb7s7Xawl2sgqNy6SH2tUKiRqyqkOiRytc=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.9.3 h1:zeC5b1GviRUyKYd6OJPvBU/mcVDVoL1OhT17FCt5dSQ=
 github.com/pelletier/go-toml v1.9.3/go.mod h1:u1nR/EPcESfeI/szUZKdtJ0xRNbUoANCkoOuaOx1Y+c=
