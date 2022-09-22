@@ -3,12 +3,14 @@ package logx
 import (
 	"context"
 	"os"
+	"time"
 
 	"github.com/panyaxbo/libs/contextx"
 	"github.com/sirupsen/logrus"
 )
 
 type Severity string
+type LogType string
 
 const (
 	severityKey = "severity"
@@ -18,6 +20,22 @@ const (
 	SeverityWarn      Severity = "WARNING"
 	SeverityError     Severity = "ERROR"
 	SeverityEmergency Severity = "EMERGENCY"
+
+	logTypeKey = "log_type"
+
+	LogTypeInBound      LogType = "INBOUND"
+	LogTypeReqInBound   LogType = "REQ_INBOUND"
+	LogTypeRespInBound  LogType = "RESP_INBOUND"
+	LogTypeOutBound     LogType = "OUTBOUND"
+	LogTypeReqOutBound  LogType = "REQ_OUTBOUND"
+	LogTypeRespOutBound LogType = "RESP_OUTBOUND"
+	LogTypeWorkFlow     LogType = "WORKFLOW"
+	LogTypeProcessing   LogType = "PROCESSING"
+
+	workFlowKey = "work_flow"
+	refIdKey    = "ref_id"
+
+	timestampFormat = time.RFC3339Nano
 )
 
 var (
@@ -38,12 +56,14 @@ func Init(level, env string) {
 		logrus.SetLevel(lvl)
 	}
 
-	if env == "dev" {
+	if env == "local" || env == "dev" {
 		logrus.SetFormatter(&logrus.TextFormatter{})
 		return
 	}
 
-	logrus.SetFormatter(&logrus.JSONFormatter{})
+	logrus.SetFormatter(&logrus.JSONFormatter{
+		TimestampFormat: timestampFormat,
+	})
 }
 
 func LimitMSGByte(b []byte) string {
@@ -96,6 +116,56 @@ func WithSeverityEmergency(ctx context.Context) logrus.FieldLogger {
 	return logrus.WithFields(logrus.Fields{
 		"id":        contextx.GetID(ctx),
 		severityKey: SeverityEmergency,
+	})
+}
+
+func WithSeverityInfoWithLogTypeWorkFlow(ctx context.Context, logType LogType, workFlow, refId string) logrus.FieldLogger {
+	return logrus.WithFields(logrus.Fields{
+		"id":        contextx.GetID(ctx),
+		severityKey: SeverityInfo,
+		logTypeKey:  logType,
+		workFlowKey: workFlow,
+		refIdKey:    refId,
+	})
+}
+
+func WithSeverityDebugWithLogTypeWorkFlow(ctx context.Context, logType LogType, workFlow, refId string) logrus.FieldLogger {
+	return logrus.WithFields(logrus.Fields{
+		"id":        contextx.GetID(ctx),
+		severityKey: SeverityDebug,
+		logTypeKey:  logType,
+		workFlowKey: workFlow,
+		refIdKey:    refId,
+	})
+}
+
+func WithSeverityWarnWithLogTypeWorkFlow(ctx context.Context, logType LogType, workFlow, refId string) logrus.FieldLogger {
+	return logrus.WithFields(logrus.Fields{
+		"id":        contextx.GetID(ctx),
+		severityKey: SeverityWarn,
+		logTypeKey:  logType,
+		workFlowKey: workFlow,
+		refIdKey:    refId,
+	})
+}
+
+func WithSeverityErrorWithLogTypeWorkFlow(ctx context.Context, logType LogType, workFlow, refId string) logrus.FieldLogger {
+	return logrus.WithFields(logrus.Fields{
+		"id":        contextx.GetID(ctx),
+		severityKey: SeverityError,
+		logTypeKey:  logType,
+		workFlowKey: workFlow,
+		refIdKey:    refId,
+	})
+}
+
+func WithSeverityEmergencyWithLogTypeWorkFlow(ctx context.Context, logType LogType, workFlow, refId string) logrus.FieldLogger {
+	return logrus.WithFields(logrus.Fields{
+		"id":        contextx.GetID(ctx),
+		severityKey: SeverityEmergency,
+		logTypeKey:  logType,
+		workFlowKey: workFlow,
+		refIdKey:    refId,
 	})
 }
 
