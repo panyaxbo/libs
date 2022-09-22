@@ -80,3 +80,20 @@ func isEmailValid(e string) bool {
 	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
 	return emailRegex.MatchString(e)
 }
+
+func StringPointerToByteArray(s *string) []byte {
+	if s == nil || *s == "" {
+		return []byte{}
+	}
+
+	return []byte(*s)
+}
+
+func ContainsInSliceString(slice []string, s string) bool {
+	for _, e := range slice {
+		if e == s {
+			return true
+		}
+	}
+	return false
+}

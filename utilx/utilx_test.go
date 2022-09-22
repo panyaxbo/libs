@@ -40,3 +40,18 @@ func TestValidEmail(t *testing.T) {
 		}
 	}
 }
+func TestStringPointerToByteArray(t *testing.T) {
+	var s *string
+	b := "aaaaa"
+	s = &b
+	r := StringPointerToByteArray(s)
+	assert.NotEmpty(t, []byte{97, 97, 97, 97, 97}, r)
+}
+
+func TestStringPointerToByteArrayEmpty(t *testing.T) {
+	var c1 *string
+	c := ""
+	c1 = &c
+	r1 := StringPointerToByteArray(c1)
+	assert.Empty(t, []byte{}, r1)
+}
