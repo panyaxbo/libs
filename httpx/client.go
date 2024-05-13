@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -70,7 +71,13 @@ func (c *Client) Do(ctx context.Context, req *Request) (*Response, error) {
 }
 
 func (c *Client) makeHTTPRequest(req *Request) (*http.Request, error) {
-	httpReq, err := http.NewRequest(req.Method, req.fullURL, bytes.NewReader(req.body))
+	var httpReq *http.Request
+	var err error
+	if len(req.PostForm) != 0 {
+		httpReq, err = http.NewRequest(req.Method, req.fullURL, strings.NewReader(req.PostForm.Encode()))
+	} else {
+		httpReq, err = http.NewRequest(req.Method, req.fullURL, bytes.NewReader(req.body))
+	}
 	if err != nil {
 		return nil, err
 	}

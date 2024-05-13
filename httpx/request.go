@@ -99,13 +99,21 @@ func (r *Request) logRequestInfo(ctx context.Context) {
 	if r.HideLogRequest {
 		return
 	}
-
-	logx.WithContext(ctx).WithFields(logrus.Fields{
-		"method": r.Method,
-		"url":    r.fullURL,
-		"body":   logx.LimitMSGByte(r.body),
-		"header": r.Header,
-	}).Info("client do request information")
+	if len(r.PostForm) != 0 {
+		logx.WithContext(ctx).WithFields(logrus.Fields{
+			"method": r.Method,
+			"url":    r.fullURL,
+			"form":   logx.LimitMSGByte([]byte(r.PostForm.Encode())),
+			"header": r.Header,
+		}).Info("client do request information")
+	} else {
+		logx.WithContext(ctx).WithFields(logrus.Fields{
+			"method": r.Method,
+			"url":    r.fullURL,
+			"body":   logx.LimitMSGByte(r.body),
+			"header": r.Header,
+		}).Info("client do request information")
+	}
 }
 
 func (r *Request) logResponseInfo(ctx context.Context, err error, b []byte, duration string, res *http.Response) {
