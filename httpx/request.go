@@ -3,6 +3,7 @@ package httpx
 import (
 	"context"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/panyaxbo/libs/contextx"
@@ -15,6 +16,7 @@ type Request struct {
 	URL       string
 	Method    string
 	Body      interface{}
+	PostForm  url.Values
 	Header    Header
 	BasicAuth *BasicAuth
 
